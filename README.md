@@ -1,6 +1,6 @@
 # EquilibriumEngine-CSharp
 
-Equilibrium Engine is a data-oriented and multi-threaded **C#** game engine that takes advantage of **ECS** pattern followed by **Hot-Reloading** of your libraries which allows you to quickly iterate on different aspects of your projects.
+Equilibrium Engine is a data-oriented **C#** game engine that takes advantage of **ECS** pattern followed by **Hot-Reloading** of your libraries which allows you to quickly iterate on different aspects of your projects.
 
 <p align="center">
 <img src="docs/home.png">
@@ -16,6 +16,7 @@ Equilibrium Engine is a data-oriented and multi-threaded **C#** game engine that
 
 #### Hot-Reloading of scripts
 
+https://user-images.githubusercontent.com/105135724/235316560-ea2e88df-0e1b-429f-97cb-9dbe3bc1102f.mp4
 
 #### Entity inspector
 
