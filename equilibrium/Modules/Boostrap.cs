@@ -10,6 +10,7 @@ public class Bootstrap : IModule
         return new List<ISystem>
             {
                 new BootstrapSystem(world),
+                new MoveLightsSystem(world),
             };
     }
 }
