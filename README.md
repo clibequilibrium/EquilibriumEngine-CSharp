@@ -16,9 +16,11 @@ Equilibrium Engine is a data-oriented **C#** game engine that takes advantage of
 
 #### Hot-Reloading of scripts
 
-https://user-images.githubusercontent.com/105135724/235316560-ea2e88df-0e1b-429f-97cb-9dbe3bc1102f.mp4
+https://user-images.githubusercontent.com/105135724/235317179-3709346e-fc15-4c61-9da7-68e847d072f5.mp4
 
 #### Entity inspector
+
+https://user-images.githubusercontent.com/105135724/235317187-7903f57a-a41e-4e6a-bcb1-9ef150e3e1f5.mp4
 
 <p align="center">
 <img src="docs/inspector.png">
