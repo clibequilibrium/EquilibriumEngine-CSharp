@@ -29,7 +29,7 @@ https://user-images.githubusercontent.com/105135724/235316560-ea2e88df-0e1b-429f
 * [Get VSCode](https://code.visualstudio.com/)
 * [Install C# Extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 * ```code .```
-* Open command pallete ```Ctrl+Shift+P``` and select ```.NET Restore All Project```
+* Open command pallete ```Ctrl+Shift+P``` and select ```.NET Restore All Projects```
 * ```Hit F5 to start debugging```
 
 *You might need to install [NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)*
