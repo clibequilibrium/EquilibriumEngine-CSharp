@@ -67,13 +67,13 @@ internal static class Engine
 
             // Phase 2: Game logic and physics update
             GameTimeAccumulator += DeltaTime;
-            // while (GameTimeAccumulator >= FixedDeltaTime)
-            // {
-            GameSystems?.BeforeUpdate(in FixedDeltaTime);
-            GameSystems?.Update(in FixedDeltaTime);
-            GameSystems?.AfterUpdate(in FixedDeltaTime);
-            GameTimeAccumulator -= FixedDeltaTime;
-            // }
+            while (GameTimeAccumulator >= FixedDeltaTime)
+            {
+                GameSystems?.BeforeUpdate(in FixedDeltaTime);
+                GameSystems?.Update(in FixedDeltaTime);
+                GameSystems?.AfterUpdate(in FixedDeltaTime);
+                GameTimeAccumulator -= FixedDeltaTime;
+            }
 
             // Phase 3: Physics simulation
             // PhysicsSystems?.SimulatePhysics(in FixedDeltaTime);
@@ -86,19 +86,19 @@ internal static class Engine
 
             // Phase 6: Rendering
             FrameTimeAccumulator += DeltaTime;
-            // while (FrameTimeAccumulator >= 1.0 / FrameRate)
-            // {
-            RenderSystems?.BeforeUpdate(in FixedDeltaTime);
-            RenderSystems?.Update(in FixedDeltaTime);
-            RenderSystems?.AfterUpdate(in FixedDeltaTime);
-
-            if (RenderSystems?.Count() > 0)
+            while (FrameTimeAccumulator >= 1.0 / FrameRate)
             {
-                Bgfx.bgfx.frame(false);
-            }
+                RenderSystems?.BeforeUpdate(in FixedDeltaTime);
+                RenderSystems?.Update(in FixedDeltaTime);
+                RenderSystems?.AfterUpdate(in FixedDeltaTime);
 
-            FrameTimeAccumulator -= 1.0 / FrameRate;
-            // }
+                if (RenderSystems?.Count() > 0)
+                {
+                    Bgfx.bgfx.frame(false);
+                }
+
+                FrameTimeAccumulator -= 1.0 / FrameRate;
+            }
 
             // Phase 7: Audio rendering
             // AudioSystems?.Render(in FixedDeltaTime);
