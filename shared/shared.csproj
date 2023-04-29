@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Arch" Version="1.2.5" />
+    <PackageReference Include="Arch.System" Version="1.0.2" />
+    <PackageReference Include="Arch.System.SourceGenerator" Version="1.1.0" />
+    <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
+    <PackageReference Include="ImGui.SDL.NET" Version="1.89.1" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
+
+    <Content Include="3rdparty\bgfx\lib\bgfx-shared-libDebug.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bgfx-shared-libDebug.dll</TargetPath>
+    </Content>
+
+    <Content Include="3rdparty\bgfx\lib\bgfx-shared-libDebug.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>bgfx-shared-libDebug.pdb</TargetPath>
+    </Content>
+
+    <Content Include="3rdparty\SDL2\lib\SDL2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>SDL2.dll</TargetPath>
+    </Content>
+
+  </ItemGroup>
+
+</Project>

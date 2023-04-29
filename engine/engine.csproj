@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\shared\shared.csproj" />
+        <PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
+
+        <Content Include="..\content\fonts\Roboto-Medium.ttf">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>content\fonts\Roboto-Medium.ttf</TargetPath>
+        </Content>
+
+        <Content Include="..\content\fonts\DroidSans.ttf">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>content\fonts\DroidSans.ttf</TargetPath>
+        </Content>
+
+        <Content Include="..\content\models\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+           <TargetPath>content\models\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+        </Content>
+    </ItemGroup>
+
+    <!-- Equilibrium Code -->
+    <ItemGroup>
+        <Plugins Include="..\equilibrium\**\*.csproj" />
+    </ItemGroup>
+
+    <Target Name="BuildPlugin" AfterTargets="Build">
+        <Message Importance="High" Text="Building plugin %(Plugins.Filename)" />
+        <MSBuild Projects="%(Plugins.Identity)" Targets="Build"
+            Properties="Configuration=$(Configuration);OutputPath=$(ProjectDir)/$(OutputPath)/%(Plugins.Filename)" />
+        <!-- <ItemGroup>
+            <FilesToRemove
+        Include="$(ProjectDir)/$(OutputPath)/plugins/%(Plugins.Filename)/*contract.*" />
+        </ItemGroup>
+        <Delete Files="@(FilesToRemove)" /> -->
+    </Target>
+
+    <!-- Shader compiler -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
+    </ItemGroup>
+
+    <UsingTask TaskName="Engine.ShaderCompilerTask" AssemblyFile="$(OutputPath)engine.dll" />
+
+    <Target Name="CompileShaders" AfterTargets="Build">
+        <ItemGroup>
+            <ShaderFiles Include="$(MSBuildProjectDirectory)\..\**\*.sc" />
+        </ItemGroup>
+        <ShaderCompilerTask ShaderFiles="@(ShaderFiles)"
+            BgfxIncludeDirectory="$(MSBuildProjectDirectory)\..\shared\3rdparty\bgfx"
+            OutputDirectory="$(MSBuildProjectDirectory)\$(OutputPath)content\shaders" />
+    </Target>
+</Project>
