@@ -1,6 +1,6 @@
 # EquilibriumEngine-CSharp
 
-Equilibrium Engine is a data-oriented and multi-threaded **C#** game engine that takes advantage of **ECS** pattern followed by **Hot-Reloading** of your libraries which allows you to quickly iterate on different aspects of your projects.
+Equilibrium Engine is a data-oriented **C#** game engine that takes advantage of **ECS** pattern followed by **Hot-Reloading** of your libraries which allows you to quickly iterate on different aspects of your projects.
 
 <p align="center">
 <img src="docs/home.png">
@@ -16,8 +16,11 @@ Equilibrium Engine is a data-oriented and multi-threaded **C#** game engine that
 
 #### Hot-Reloading of scripts
 
+https://user-images.githubusercontent.com/105135724/235317179-3709346e-fc15-4c61-9da7-68e847d072f5.mp4
 
 #### Entity inspector
+
+https://user-images.githubusercontent.com/105135724/235317187-7903f57a-a41e-4e6a-bcb1-9ef150e3e1f5.mp4
 
 <p align="center">
 <img src="docs/inspector.png">
@@ -28,7 +31,7 @@ Equilibrium Engine is a data-oriented and multi-threaded **C#** game engine that
 * [Get VSCode](https://code.visualstudio.com/)
 * [Install C# Extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 * ```code .```
-* Open command pallete ```Ctrl+Shift+P``` and select ```.NET Restore All Project```
+* Open command pallete ```Ctrl+Shift+P``` and select ```.NET Restore All Projects```
 * ```Hit F5 to start debugging```
 
 *You might need to install [NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)*
