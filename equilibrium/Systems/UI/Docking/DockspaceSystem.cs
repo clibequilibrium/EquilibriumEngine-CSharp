@@ -101,7 +101,7 @@ public partial class DockspaceSystem : GuiSystem
             ImGui.Text(Bgfx.bgfx.get_renderer_type().ToString());
 
             ImGui.SameLine(region.X - 175f, 0);
-            ImGui.Text(string.Format("{0:0.##} FPS ({1:1.##} ms)", ImGui.GetIO().Framerate, 1000.0f / ImGui.GetIO().Framerate));
+            ImGui.Text($"{ImGui.GetIO().Framerate:F2} FPS ({1000.0f / ImGui.GetIO().Framerate:F2} ms)");
 
             float button_size = 25.0f;
             ImGui.SameLine(region.X - button_size, 0);
