@@ -49,7 +49,7 @@ public partial class SdlSystem : BaseSystem<World, float>, IInputSystem
 
     [Query]
     [All<Input, AppWindow, AppWindowHandle>]
-    private unsafe void SdlProcessEvents(ref Input input, ref AppWindow appWindow, ref AppWindowHandle appWindowHandle)
+    private unsafe void SdlProcessEvents(ref Input input, ref AppWindow appWindow, ref AppWindowHandle appWindowHandle, in Entity entity)
     {
         for (int k = 0; k < 128; k++)
         {
@@ -143,6 +143,8 @@ public partial class SdlSystem : BaseSystem<World, float>, IInputSystem
                 else if (eventType == SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED || eventType == SDL_WindowEventID.SDL_WINDOWEVENT_DISPLAY_CHANGED
                 || eventType == SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED)
                 {
+                    if (entity.Has<Maximized>())
+                        SetWindowMaximized(appWindowHandle.Value);
                     SetWindowMaximized(appWindowHandle.Value);
                 }
             }
