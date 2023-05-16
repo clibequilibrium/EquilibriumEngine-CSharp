@@ -14,8 +14,6 @@ public struct Camera
     public float Near;
     public float Far;
     public bool Ortho;
-    public Matrix4x4 View;
-    public Matrix4x4 Proj;
 }
 
 public struct PointLight

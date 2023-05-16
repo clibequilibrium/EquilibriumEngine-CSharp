@@ -1,14 +1,10 @@
-using System.Diagnostics;
 using System.Numerics;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
-using Bgfx;
 using Equilibrium.Components;
 using MathNet.Numerics;
-using SDL2;
-using static Bgfx.bgfx;
 using static SDL2.SDL;
 
 namespace Equilibrium.Systems.Rendering;
@@ -16,7 +12,7 @@ namespace Equilibrium.Systems.Rendering;
 public partial class CameraSystem : BaseSystem<World, float>, IInputSystem
 {
     private const float MIN_FOV = 10.0f;
-    private const float MAX_FOV = 120.0f;
+    private const float MAX_FOV = 90.0f;
 
     public CameraSystem(World world) : base(world)
     {
@@ -27,7 +23,7 @@ public partial class CameraSystem : BaseSystem<World, float>, IInputSystem
     [All<BgfxComponent>, None<Camera>]
     private void InitializeCamera(in Entity entity)
     {
-        Camera camera = new Camera { Fov = 73.7397953f, Near = 0.1f, Far = 2000.0f, Position = new Vector3(-8, 3, 0) };
+        Camera camera = new Camera { Fov = 73.7397953f, Near = 0.741915643f, Far = 37.0957832f, Position = new Vector3(-8, 3, 0) };
         camera.Up = Vector3.UnitY;
 
         Vector3 target = Vector3.UnitZ;

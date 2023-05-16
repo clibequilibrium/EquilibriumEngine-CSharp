@@ -1,9 +1,16 @@
 
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using MathNet.Numerics;
 
 public static class MathUtils
 {
+    public enum Handness
+    {
+        Left,
+        Right
+    };
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static float truncbx(float a) { return (float)((int)(a)); }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -81,22 +88,21 @@ public static class MathUtils
     }
 
     //  Generates a left-handed perspective projection matrix that does not normalize the depth range of the projected points.
-    public static Matrix4x4 CreatePerspective(float fovy, float aspect, float nearZ, float farZ)
+    public static void CreatePerspective(ref Span<float> result, float fovy, float aspect, float nearZ, float farZ, byte homogenousNdc, Handness handness = Handness.Left)
     {
-        float f, fn;
-
-        Matrix4x4 dest = new Matrix4x4();
-
-        f = 1.0f / (float)Math.Tan(fovy * 0.5f);
-        fn = 1.0f / (nearZ - farZ);
-
-        dest.M11 = f / aspect;
-        dest.M22 = f;
-        dest.M33 = -(nearZ + farZ) * fn;
-        dest.M34 = 1.0f;
-        dest.M43 = 2.0f * nearZ * farZ * fn;
-
-        return dest;
+        float height = 1.0f / MathF.Tan((float)Trig.DegreeToRadian(fovy) * 0.5f);
+        float width = height * 1.0f / aspect;
+        float diff = farZ - nearZ;
+        float aa = homogenousNdc == 1 ? (farZ + nearZ) / diff : farZ / diff;
+        float bb = homogenousNdc == 1 ? (2.0f * farZ * nearZ) / diff : nearZ * aa;
+        result.Clear();
+        result[0] = width;
+        result[5] = height;
+        result[8] = (Handness.Right == handness) ? 0 : -0;
+        result[9] = (Handness.Right == handness) ? 0 : -0;
+        result[10] = (Handness.Right == handness) ? -aa : aa;
+        result[11] = (Handness.Right == handness) ? -1.0f : 1.0f;
+        result[14] = -bb;
     }
 
     public static Matrix3x3 ToMatrix3x3(this Matrix4x4 mat)

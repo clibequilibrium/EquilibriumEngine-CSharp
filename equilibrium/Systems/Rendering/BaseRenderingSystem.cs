@@ -241,16 +241,14 @@ public partial class BaseRenderingSystem : BaseSystem<World, float>, IRenderSyst
         // Multiply translationMat * rotationMat (row-major order)
         view = Matrix4x4.Multiply(translationMat, rotationMat);
 
-        // left handed coordinate system perspective 
-        Matrix4x4 proj = MathUtils.CreatePerspective((float)Trig.DegreeToRadian(camera.Fov), (float)width / (float)height, camera.Near, camera.Far);
-
         unsafe
         {
-            bgfx.set_view_transform(viewId, &view, &proj);
+            float* proj = stackalloc float[16];
+            Span<float> projSpan = new Span<float>(proj, 16);
+            // left handed coordinate system perspective 
+            MathUtils.CreatePerspective(ref projSpan, camera.Fov, (float)width / (float)height, camera.Near, camera.Far, bgfx.get_caps()->homogeneousDepth);
+            bgfx.set_view_transform(viewId, &view, proj);
         }
-
-        camera.View = view;
-        camera.Proj = proj;
     }
 
     public static void SetNormalMatrix(in FrameData frameData, in Matrix4x4 modelMatrix)
