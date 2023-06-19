@@ -50,7 +50,7 @@ public partial class CameraSystem : BaseSystem<World, float>, IInputSystem
     }
     [Query]
     [All<AppWindow, Camera, Input>]
-    private void UpdateCamera(in Entity entity, in AppWindow appWindow, ref Camera camera, in Input input)
+    private void UpdateCamera(in Entity entity, in AppWindow appWindow, in AppWindowHandle appWindowHandle, ref Camera camera, in Input input)
     {
         float deltaTime = Data;
         const float angularVelocity = 180.0f / 600.0f; // degrees/pixel
@@ -109,7 +109,8 @@ public partial class CameraSystem : BaseSystem<World, float>, IInputSystem
             if (SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE)
             {
                 SDL_SetRelativeMouseMode(SDL_bool.SDL_FALSE);
-                SDL_WarpMouseGlobal(appWindow.Width / 2, appWindow.Height / 2);
+                SDL_GetWindowPosition(appWindowHandle.Value, out var x, out var y);
+                SDL_WarpMouseGlobal(x + (appWindow.Width / 2), y + (appWindow.Height / 2));
                 SDL_ShowCursor(SDL_ENABLE);
             }
         }
