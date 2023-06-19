@@ -95,7 +95,7 @@ public partial class ForwardRendererSystem : BaseSystem<World, float>, IRenderSy
         }
 
         ForwardRenderer forwardRenderer = default;
-        World.LoadShaders(ref forwardRenderer);
+        World.LoadShaders(in entity, ref forwardRenderer);
 
         entity.Add(forwardRenderer);
 

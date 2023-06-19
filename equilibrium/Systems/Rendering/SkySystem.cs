@@ -138,9 +138,10 @@ public partial class SkySystem : BaseSystem<World, float>, IRenderSystem
         skyData.UPerezCoeff = World.CreateUniform("u_perezCoeff", UniformType.Vec4, 5);
 
         skyData.Turbidity = 2.15f;
-        World.LoadShaders(ref skyData);
 
         var entity = World.Create(new Name { Value = "SkySystemData" });
+        World.LoadShaders(in entity, ref skyData);
+
         entity.Add(skyData);
         entity.Add(sun);
     }

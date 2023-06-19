@@ -11,7 +11,7 @@
     <ItemGroup>
         <ProjectReference Include="..\shared\shared.csproj" />
         <PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
-
+    
         <Content Include="..\content\fonts\Roboto-Medium.ttf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>content\fonts\Roboto-Medium.ttf</TargetPath>
@@ -24,7 +24,7 @@
 
         <Content Include="..\content\models\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-           <TargetPath>content\models\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+            <TargetPath>content\models\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
         </Content>
     </ItemGroup>
 
@@ -45,12 +45,7 @@
     </Target>
 
     <!-- Shader compiler -->
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
-    </ItemGroup>
-
-    <UsingTask TaskName="Engine.ShaderCompilerTask" AssemblyFile="$(OutputPath)engine.dll" />
+    <UsingTask TaskName="ShaderCompilerTask" AssemblyFile="$(OutputPath)shared.dll" />
 
     <Target Name="CompileShaders" AfterTargets="Build">
         <ItemGroup>

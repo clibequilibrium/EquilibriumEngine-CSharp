@@ -1,5 +1,5 @@
-using System.Reflection;
 using Arch.Core;
+using Arch.Core.Utils;
 
 public enum ResourceType
 {
@@ -21,9 +21,6 @@ public struct GfxResource
 
 public struct HotReloadableShader
 {
-    public int ComponentId;
-    public string FieldName;
+    public ComponentType ComponentType;
+    public Entity Entity;
 }
-
-public struct ReloadShader
-{ }

@@ -1,72 +1,73 @@
-using System.Diagnostics;
-using System.Numerics;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Arch.Core;
-using Arch.Core.Extensions;
+using Arch.Core.Utils;
 using Arch.System;
-using Arch.System.SourceGenerator;
-using Bgfx;
-using Equilibrium.Components;
-using static Bgfx.bgfx;
-using Transform = Equilibrium.Components.Transform;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 namespace Equilibrium.Systems.Rendering;
 
 public partial class ShaderHotReloadingSystem : BaseSystem<World, float>, IRenderSystem
 {
-    private FileSystemWatcher shaderSourceWatcher = null!;
-
-    private string GetThisFilePath([CallerFilePath] string path = null!)
-    {
-        return path;
-    }
+    private FileSystemWatcher shaderFolderWatcher = null!;
+    private ConcurrentQueue<string> reloadedShadersQueue = new ConcurrentQueue<string>();
+    private QueryDescription shadersQueryDescription;
 
     public ShaderHotReloadingSystem(World world) : base(world)
     {
-        var path = GetThisFilePath();
+        shaderFolderWatcher = new FileSystemWatcher(@$"{AppContext.BaseDirectory}/content/shaders");
 
-        var rootDirectory = Path.GetDirectoryName(path)!; // directory = @"path\to\your\source\code"
-        var sourceCodeDirectory = Path.Combine(Directory.GetParent(path)?.Parent?.Parent?.Parent?.FullName!, @"content\shaders\");
-
-        if (!Directory.Exists(sourceCodeDirectory))
-        {
-            return;
-        }
-
-        shaderSourceWatcher = new FileSystemWatcher(sourceCodeDirectory);
-
-        shaderSourceWatcher.NotifyFilter = NotifyFilters.CreationTime
+        shaderFolderWatcher.NotifyFilter = NotifyFilters.CreationTime
                              | NotifyFilters.DirectoryName
                              | NotifyFilters.FileName
                              | NotifyFilters.LastWrite
                              | NotifyFilters.Size;
 
-        shaderSourceWatcher.Changed += new FileSystemEventHandler(OnContentChanged);
-        shaderSourceWatcher.Created += new FileSystemEventHandler(OnContentChanged);
-        shaderSourceWatcher.Deleted += new FileSystemEventHandler(OnContentChanged);
-        shaderSourceWatcher.Renamed += new RenamedEventHandler(OnContentChanged);
+        shaderFolderWatcher.Changed += new FileSystemEventHandler(OnShaderRecompiled);
+        shaderFolderWatcher.Created += new FileSystemEventHandler(OnShaderRecompiled);
+        shaderFolderWatcher.Deleted += new FileSystemEventHandler(OnShaderRecompiled);
+        shaderFolderWatcher.Renamed += new RenamedEventHandler(OnShaderRecompiled);
 
-        shaderSourceWatcher.IncludeSubdirectories = true;
-        shaderSourceWatcher.EnableRaisingEvents = true;
+        shaderFolderWatcher.IncludeSubdirectories = true;
+        shaderFolderWatcher.EnableRaisingEvents = true;
+
+        shadersQueryDescription = new QueryDescription().WithAll<HotReloadableShader>();
     }
 
-    private void OnContentChanged(object source, FileSystemEventArgs e)
+    public override void BeforeUpdate(in float t)
+    {
+        base.BeforeUpdate(t);
+
+        while (reloadedShadersQueue.TryDequeue(out var dequeuedShaderName))
+        {
+            World.Query(in shadersQueryDescription, (in Entity entity, ref HotReloadableShader shader) =>
+            {
+                var component = World.Get(shader.Entity, shader.ComponentType);
+
+                if (BgfxUtils.HotReloadShaders(shader.Entity, shader.ComponentType, dequeuedShaderName, ref component))
+                {
+                    World.Set(shader.Entity, component);
+                }
+            });
+        }
+    }
+
+    private void OnShaderRecompiled(object source, FileSystemEventArgs e)
     {
         try
         {
-            shaderSourceWatcher.EnableRaisingEvents = false;
-            Console.WriteLine("Changed!" + e.FullPath);
+            reloadedShadersQueue.Enqueue(Path.GetFileNameWithoutExtension(e.FullPath));
         }
         finally
         {
-            shaderSourceWatcher.EnableRaisingEvents = true;
+            shaderFolderWatcher.EnableRaisingEvents = true;
         }
     }
 
     public override void Dispose()
     {
         base.Dispose();
-
-        shaderSourceWatcher?.Dispose();
+        shaderFolderWatcher?.Dispose();
     }
 }

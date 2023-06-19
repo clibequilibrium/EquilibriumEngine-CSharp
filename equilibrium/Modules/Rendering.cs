@@ -18,6 +18,7 @@ public class Rendering : IModule
         return new List<ISystem>
             {
                 new GfxDestroyResourceSystem(world),
+                new ShaderHotCompilingSystem(world),
                 new ShaderHotReloadingSystem(world),
                 new TransformSystem(world),
                 new BaseRenderingSystem(world),

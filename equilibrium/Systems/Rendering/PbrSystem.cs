@@ -50,7 +50,7 @@ public partial class PBRSystem : BaseSystem<World, float>, IRenderSystem
         pbrShader.AlbedoLutTexture = World.CreateTexture2d(RendererConstants.ALBEDO_LUT_SIZE, RendererConstants.ALBEDO_LUT_SIZE, false, 1, TextureFormat.RGBA32F,
             (ulong)SamplerFlags.UvwClamp | (ulong)TextureFlags.ComputeWrite);
 
-        World.LoadShaders(ref pbrShader);
+        World.LoadShaders(in entity, ref pbrShader);
         GenerateAlbedoLut(in pbrShader);
 
         entity.Add(pbrShader);

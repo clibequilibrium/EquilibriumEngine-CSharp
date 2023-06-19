@@ -3,8 +3,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 
-namespace Engine;
-
 public class ShaderCompilerTask : Microsoft.Build.Utilities.Task
 {
     [Required]
@@ -98,12 +96,18 @@ public class ShaderCompilerTask : Microsoft.Build.Utilities.Task
             }
             else
             {
-                Log.LogError($"Unknown shader type {fileName}");
+                Log?.LogError($"Unknown shader type {fileName}");
                 continue;
             }
 
             processStartInfo.Arguments = $@"-i {BgfxIncludeDirectory.ItemSpec}\include\ --type {shaderType} --platform {shaderPlatforms} -f {shaderAbsolutePath} -o {outputPath} -p {shaderProfile} --verbose";
-            Log.LogMessage(MessageImportance.High, $"Compiling {fileName}");
+
+            string message = $"Compiling {fileName}";
+
+            if (Log?.TaskResources != null)
+                Log.LogMessage(MessageImportance.High, message);
+            else
+                Console.WriteLine(message);
 
             using var process = Process.Start(processStartInfo);
             process?.WaitForExit();

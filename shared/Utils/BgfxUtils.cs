@@ -223,7 +223,7 @@ public static class BgfxUtils
         return handle;
     }
 
-    public static void LoadShaders<T>(this World world, ref T component) where T : struct
+    public static void LoadShaders<T>(this World world, in Entity entity, ref T component) where T : struct
     {
         var shaderAttributes = GetAttributeListRecursive<ShaderAttribute>(typeof(T));
 
@@ -246,11 +246,72 @@ public static class BgfxUtils
 
             Entity programEntity = CreateGfxResource(world, ResourceType.Program, handle.idx);
             programEntity.Add(new Name { Value = typeof(T).Name + "." + attribute.Item1.Name });
-            programEntity.Add(new HotReloadableShader { ComponentId = ((ComponentType)typeof(T)).Id, FieldName = attribute.Item1.Name });
+            programEntity.Add(new HotReloadableShader { ComponentType = (ComponentType)typeof(T), Entity = entity });
 
             // Set field value
             attribute.Item1.SetValueDirect(__makeref(component), handle);
         }
+    }
+
+    public static bool HotReloadShaders(this Entity entity, ComponentType componentType, string shaderName, ref object component)
+    {
+        var shaderAttributes = GetAttributeListRecursive<ShaderAttribute>(componentType.Type);
+        bool reload = false;
+
+        foreach (var attribute in shaderAttributes)
+        {
+            if (attribute.Item2.ComputeShaderName == null)
+            {
+                if (attribute.Item2.VertexShaderName != null && attribute.Item2.VertexShaderName.Equals(shaderName))
+                {
+                    reload = true;
+                    break;
+                }
+
+                if (attribute.Item2.FragmentShaderName != null && attribute.Item2.FragmentShaderName.Equals(shaderName))
+                {
+                    reload = true;
+                    break;
+                }
+            }
+            else if (attribute.Item2.ComputeShaderName.Equals(shaderName))
+            {
+                reload = true;
+                break;
+            }
+        }
+
+        if (!reload)
+        {
+            return false;
+        }
+
+        foreach (var attribute in shaderAttributes)
+        {
+            var handle = new ProgramHandle { idx = BgfxConstants.InvalidHandle };
+
+            if (attribute.Item2.ComputeShaderName == null)
+            {
+                ShaderHandle vertexHandle = LoadShader(attribute.Item2.VertexShaderName!);
+                ShaderHandle fragmentHandle = LoadShader(attribute.Item2.FragmentShaderName!);
+
+                handle = bgfx.create_program(vertexHandle, fragmentHandle, true);
+            }
+            else
+            {
+                ShaderHandle computeShaderHandle = LoadShader(attribute.Item2.ComputeShaderName);
+                handle = bgfx.create_compute_program(computeShaderHandle, true);
+            }
+
+            // Dealocate memory
+            ProgramHandle shaderHandle = (ProgramHandle)attribute.Item1.GetValueDirect(__makeref(component))!;
+            bgfx.destroy_program(shaderHandle);
+
+            // Set field value
+            attribute.Item1.SetValueDirect(__makeref(component), handle);
+        }
+
+        return true;
     }
 
     private static IEnumerable<(FieldInfo, T)> GetAttributeListRecursive<T>(Type type, HashSet<Type> hashSet = null!) where T : Attribute

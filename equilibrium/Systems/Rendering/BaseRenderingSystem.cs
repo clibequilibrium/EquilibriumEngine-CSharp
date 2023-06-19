@@ -42,7 +42,7 @@ public partial class BaseRenderingSystem : BaseSystem<World, float>, IRenderSyst
         PosVertex* vertices = stackalloc PosVertex[] { new(LEFT, BOTTOM, 0.0f), new(RIGHT, BOTTOM, 0.0f), new(LEFT, TOP, 0.0f) };
 
         frameData.BlitTriangleBuffer = World.CreateVertexBuffer(new nint(vertices), sizeof(PosVertex) * 3, vertexLayout);
-        World.LoadShaders(ref frameData);
+        World.LoadShaders(in entity, ref frameData);
 
         frameData.FrameBuffer = CreateFrameBuffer(true, true);
         bgfx.set_frame_buffer_name(frameData.FrameBuffer, "Render framebuffer (pre-postprocessing)", int.MaxValue);
