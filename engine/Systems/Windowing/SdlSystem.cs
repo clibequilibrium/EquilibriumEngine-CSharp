@@ -145,7 +145,6 @@ public partial class SdlSystem : BaseSystem<World, float>, IInputSystem
                 {
                     if (entity.Has<Maximized>())
                         SetWindowMaximized(appWindowHandle.Value);
-                    SetWindowMaximized(appWindowHandle.Value);
                 }
             }
         }
