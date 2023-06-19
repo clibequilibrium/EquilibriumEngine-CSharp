@@ -58,7 +58,7 @@ public partial class ShaderHotReloadingSystem : BaseSystem<World, float>, IRende
                 }
                 else
                 {
-                    Console.Error.WriteLine("Failed to hot reload shaders. ComponentRegistry missmatch");
+                    Console.Error.WriteLine("Failed to hot reload shaders. ComponentRegistry mismatch");
                 }
             });
         }
