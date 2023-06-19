@@ -18,7 +18,7 @@ Equilibrium Engine is a data-oriented **C#** game engine that takes advantage of
 
 https://user-images.githubusercontent.com/105135724/235317402-0e627dac-ebef-4d71-be15-945d80b81c03.mp4
 
-##### Hot-Reloading of shaders
+#### Hot-Reloading of shaders
 
 https://github.com/clibequilibrium/EquilibriumEngine-CSharp/assets/105135724/a88acfb0-2bcf-4ce5-8088-3062fe7b1ac8
 
