@@ -1,10 +1,8 @@
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
+using System.Reflection;
 using Arch.Core;
 using Arch.Core.Utils;
 using Arch.System;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
 namespace Equilibrium.Systems.Rendering;
 
@@ -43,11 +41,24 @@ public partial class ShaderHotReloadingSystem : BaseSystem<World, float>, IRende
         {
             World.Query(in shadersQueryDescription, (in Entity entity, ref HotReloadableShader shader) =>
             {
-                var component = World.Get(shader.Entity, shader.ComponentType);
+                // Find obsolete types after potential hot reloading of scripts
+                var newType = Assembly.GetExecutingAssembly()?.GetType(shader.ComponentType.Type.FullName!);
 
-                if (BgfxUtils.HotReloadShaders(shader.Entity, shader.ComponentType, dequeuedShaderName, ref component))
+                if (newType == null)
+                    return;
+
+                if (ComponentRegistry.TryGet(newType, out shader.ComponentType))
                 {
-                    World.Set(shader.Entity, component);
+                    var component = World.Get(shader.Entity, shader.ComponentType);
+
+                    if (BgfxUtils.HotReloadShaders(shader.Entity, shader.ComponentType, dequeuedShaderName, ref component))
+                    {
+                        World.Set(shader.Entity, component);
+                    }
+                }
+                else
+                {
+                    Console.Error.WriteLine("Failed to hot reload shaders. ComponentRegistry missmatch");
                 }
             });
         }
