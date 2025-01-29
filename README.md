@@ -7,8 +7,6 @@ Equilibrium Engine is a data-oriented **C#** game engine that takes advantage of
 </p>
 
 ## Features
-#### clang is the primarily supported compiler
-
   * [Arch C# Entity Component System](https://github.com/genaray/Arch)
   * Forward Shading. [PBR & HDR Tonemapping](https://github.com/pezcode/Cluster)
   * [AssimpNet](https://bitbucket.org/Starnick/assimpnet/src/master/) model loading
@@ -39,6 +37,10 @@ https://user-images.githubusercontent.com/105135724/235317410-f22d20b0-b4b6-4341
 * ```Hit F5 to start debugging```
 
 *You might need to install [NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)*
+
+## Known issues
+
+[Precompiled bgfx binaries don't have BGFX_CONFIG_PROFILER flag set](https://github.com/clibequilibrium/EquilibriumEngine-CSharp/issues/2#issuecomment-2620265309)
 
 ## Screenshots
 
